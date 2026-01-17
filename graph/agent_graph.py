@@ -1,4 +1,4 @@
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode
 from tools.color_blocks_tool import color_blocks_astar_cost
 from agents.agent_states import AgentState
@@ -8,7 +8,9 @@ from agents.manager_agent import manager_agent
 
 
 def build_graph(llm, llm_with_tools):
-    graph = StateGraph(AgentState)
+    # graph = StateGraph(AgentState)    #TODO: see what to use here
+    graph = StateGraph(MessagesState)
+    
     # Define nodes
     graph.add_node("manager", manager_agent(llm))
     graph.add_node("self_solver", self_solver_agent(llm))
