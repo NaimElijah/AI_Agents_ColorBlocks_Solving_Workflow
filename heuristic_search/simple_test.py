@@ -1,6 +1,6 @@
 import time
 from heuristics import *
-from color_blocks_state import *
+from heuristic_search import *
 from search import *
 
 if __name__ == '__main__':

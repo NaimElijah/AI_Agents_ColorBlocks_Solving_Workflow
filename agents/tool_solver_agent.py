@@ -1,13 +1,36 @@
 from agents.agent_base import AgentBase
-from types.state import AgentState
+from langchain_core.messages import SystemMessage, HumanMessage
+from states.state1 import AgentState
 from tools.color_blocks_tool import color_blocks_astar_cost
+
 
 class ToolSolverAgent(AgentBase):
     def __init__(self, llm):
         super().__init__(llm)
 
-    async def __call__(self, state: AgentState) -> AgentState: # __call__ method lets a class instance be called as a function, LangGraph expects nodes to be callables
+    async def __call__(self, state: AgentState) -> AgentState:  # __call__ method lets a class instance be called as a function, LangGraph expects nodes to be callables
+        system_prompt = SystemMessage(
+            content=(
+                "You are an AI agent that MUST use the provided tool "
+                "'color_blocks_astar_cost' to compute the solution cost.\n"
+                "Call the tool exactly once.\n"
+                "Then explain briefly how the cost was obtained."
+            )
+        )
+
+        user_prompt = HumanMessage(
+            content=(
+                f"Color Blocks problem:\n"
+                f"Start blocks: {state['start_blocks']}\n"
+                f"Goal fronts: {state['goal_blocks']}\n\n"
+                "Use the tool and then output in the following format:\n"
+                "COST: <integer>\n"
+                "REASON: <short explanation>"
+            )
+        )
+
+        response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {"ToolSolverAgent_output": color_blocks_astar_cost(state["start_blocks"], state["goal_blocks"])}
-    
+        return {"ToolSolverAgent_output": response.content}
+
     

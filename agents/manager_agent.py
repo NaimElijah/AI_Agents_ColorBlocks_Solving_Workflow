@@ -1,27 +1,38 @@
 from agents.agent_base import AgentBase
-from types.state import AgentState
+from langchain_core.messages import SystemMessage, HumanMessage
+from states.state1 import AgentState
+
 
 class ManagerAgent(AgentBase):
-    def __init__(self, llm, selfAgent, toolAgent):
-        self.name = "ManagerAgent"
+    def __init__(self, llm):
         super().__init__(llm)
-        self.selfAgent = selfAgent
-        self.toolAgent = toolAgent
 
-    async def run(self, state: AgentState) -> AgentState:
-        # Implement the logic for the manager agent here
-        self_res = state["SelfSolverAgent_output"]
-        my_res = state["ToolSolverAgent_output"]
+    async def __call__(self, state: AgentState) -> dict:
+        self_res = state.get("SelfSolverAgent_output")   # Get outputs from previous agents, who were called before in the graph and added to the state
+        tool_res = state.get("ToolSolverAgent_output")   # Get outputs from previous agents, who were called before in the graph and added to the state
 
-        # run the other 2 agents and compare their results
-        self_res = await self.selfAgent(state)
-        my_res = await self.toolAgent(state)
+        system_prompt = SystemMessage(
+            content=(
+                "You are a manager agent acting as an LLM-as-a-judge.\n"
+                "Compare two solutions to the same color blocks problem.\n"
+                "Explain differences and give a short summary.\n"
+                "Prefer reliable, algorithmic solutions when appropriate."
+            )
+        )
 
-        prompt = f"compare the results of the two agents:\nSelf Solver Result: {self_res}\nTool Solver Result: {my_res}\nProvide feedback on their performance."
-        manager_feedback = await self.llm.apredict(prompt)
+        user_prompt = HumanMessage(
+            content=(
+                "Color Blocks solution comparison:\n\n"
+                f"Self-solver output:\n{self_res}\n\n"
+                f"Tool-based solver output:\n{tool_res}\n\n"
+                "Output in the following format:\n"
+                "DIFFERENCES: <list differences>\n"
+                "SUMMARY: <2-4 sentences>\n"
+                "FINAL_DECISION: <which solution is more reliable and why>"
+            )
+        )
 
-        #TODO: with llm, compare the results properly
-
+        response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {"manager_feedback": manager_feedback}
+        return {"manager_feedback": response.content}
 

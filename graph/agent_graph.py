@@ -1,19 +1,19 @@
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode
 from tools.color_blocks_tool import color_blocks_astar_cost
-from types.state import AgentState
-from agents.self_solver_agent import self_solver_agent
-from agents.tool_solver_agent import my_solver_agent
-from agents.manager_agent import manager_agent
+from states.state1 import AgentState
+from agents.self_solver_agent import SelfSolverAgent
+from agents.tool_solver_agent import ToolSolverAgent
+from agents.manager_agent import ManagerAgent
 
 
 def build_graph(llm, llm_with_tools):
     graph = StateGraph(AgentState)
     
     # Define nodes
-    graph.add_node("manager", manager_agent(llm))
-    graph.add_node("self_solver", self_solver_agent(llm))
-    graph.add_node("with_tools_solver", my_solver_agent(llm_with_tools))
+    graph.add_node("manager", ManagerAgent(llm))
+    graph.add_node("self_solver", SelfSolverAgent(llm))
+    graph.add_node("with_tools_solver", ToolSolverAgent(llm_with_tools))
     graph.add_node("tools", ToolNode([color_blocks_astar_cost]))
 
     # Define edges

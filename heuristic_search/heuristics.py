@@ -1,5 +1,5 @@
 import re
-from color_blocks_state import color_blocks_state
+from heuristic_search import color_blocks_state
 
 # you can add helper functions and params
 goal_pairs = set()        # unordered adjacency pairs

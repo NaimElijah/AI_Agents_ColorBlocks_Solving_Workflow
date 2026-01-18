@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
-from Heuristic_color_blocks_search_code.heuristics import base_heuristic, init_goal_for_heuristics, advanced_heuristic
-from Heuristic_color_blocks_search_code.color_blocks_state import color_blocks_state, init_goal_for_search
+from heuristic_search.heuristics import base_heuristic, init_goal_for_heuristics, advanced_heuristic
+from heuristic_search.color_blocks_state import color_blocks_state, init_goal_for_search
 from heuristic_search import search
 
 # Initialize FastMCP, with a custom name for the tool set.
