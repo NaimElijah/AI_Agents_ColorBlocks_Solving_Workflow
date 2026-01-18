@@ -16,5 +16,3 @@ def color_blocks_astar_cost(start_blocks: str, goal_blocks: str, heuristic="base
         return search(start_state, advanced_heuristic)[-1].g      # need to return the cost only
     return search(start_state, base_heuristic)[-1].g              # need to return the cost only
 
-    # return solve_color_blocks_cost(start_blocks, goal_blocks, heuristic)
-
