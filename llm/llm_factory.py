@@ -30,14 +30,12 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 
-# Choose your model here, can be Ollama or Google Gemini. Can also switch between different model sizes as needed.
-# model = "gemini-2.5-flash"
-# model = "gemini-2.5-flash-lite"
-# global_llm = ChatGoogleGenerativeAI(model=model, temperature=0)
+
+# global_llm = ChatGoogleGenerativeAI(model=config.llm_model, temperature=config.llm_temperature)
 # SETUP API KEY if using Google Gemini
 # os.environ["GOOGLE_API_KEY"] = config.llm_api_key
 
-global_llm = ChatOllama(model=config.llm_model, temperature=config.llm_temperature)   # can be Ollama or Google Gemini or ...
+global_llm = ChatOllama(model=config.llm_model, temperature=config.llm_temperature)   # can be Ollama or Google Gemini(above) or ...
 
 def get_llm():
     return global_llm

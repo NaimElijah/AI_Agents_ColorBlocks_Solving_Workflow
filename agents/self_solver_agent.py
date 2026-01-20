@@ -21,8 +21,8 @@ class SelfSolverAgent(AgentBase):
         user_prompt = HumanMessage(
             content=(
                 f"Color Blocks problem:\n"
-                f"Start blocks: {state['start_blocks']}\n"
-                f"Goal fronts: {state['goal_blocks']}\n\n"
+                f"Start blocks: {state[config.state_start_blocks_field]}\n"
+                f"Goal fronts: {state[config.state_goal_blocks_field]}\n\n"
                 "Output in the following format:\n"
                 "COST: <integer>\n"
                 "REASON: <short explanation>"

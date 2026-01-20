@@ -7,7 +7,7 @@ class AgentState(TypedDict, total=False):  # total=False makes all fields option
     start_blocks: str
     goal_blocks: str
     SelfSolverAgent_output: str
-    tools_outputs: str
+    ToolSolverAgent_output: str
     manager_feedback: str
     # Add other state fields as needed
     #! These field names need to match the state field names in the config.py

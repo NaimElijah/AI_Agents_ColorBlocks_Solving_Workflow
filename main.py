@@ -4,16 +4,13 @@ from graph.agent_graph import build_graph
 from llm.llm_factory import get_llm, get_llm_with_tools
 from tools.color_blocks_tool import color_blocks_astar_cost
 
-# 2 options of using tools here: either bind the tools to the LLM before passing it to the agent, or use a ToolNode in the graph. We'll use a ToolNode here.
+# 2 options of using tools here: either bind the tools to the LLM before passing it to the agent, or use a ToolNode in the graph. We'll use tool binding here.
 # General Note: Agents transform state; graphs control execution.
 # An async main function to run the graph
 async def main():
 
     llm = get_llm()
-    # tool_set_AStar = [color_blocks_astar_cost]
-    # llm_with_tools = get_llm_with_tools(tool_set_AStar)
 
-    # graph = build_graph(llm, llm_with_tools)        # Build the graph & compile it
     graph = build_graph(llm)        # Build the graph & compile it
 
     # The problems in a "start_blocks|goal_blocks" format
@@ -42,16 +39,13 @@ async def main():
             result = await graph.ainvoke(initial_state)
             # the graph returns a dictionary with all the outputs from the nodes, which is the final state of the graph
 
-            print("\n-" * 50 + "\n")
-            print("\nToolSolverAgent_output: ")
-            print(result.get(config.tools_usage_solver_output_field))
-            print("\n-" * 50 + "\n")
-            print("\nSelfSolverAgent_output: ")
-            print(result.get(config.self_solver_output_field))
-            print("\n-" * 50 + "\n")
-            print("\nManagerAgent_feedback:")
-            print(result.get(config.manager_feedback_field))
-            print("\n-" * 50 + "\n")
+            print("-" * 40 + "\n")
+            print(f"\nToolSolverAgent_output: {result.get(config.tools_usage_solver_output_field)}\n")
+            print("-" * 40 + "\n")
+            print(f"\nSelfSolverAgent_output: {result.get(config.self_solver_output_field)}\n")
+            print("-" * 40 + "\n")
+            print(f"\nManagerAgent_feedback: {result.get(config.manager_feedback_field)}\n")
+            print("-" * 40 + "\n")
 
         except Exception as e:
             print(f"Error processing problem {i}: {e.__str__()}\n")

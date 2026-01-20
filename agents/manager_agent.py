@@ -10,6 +10,7 @@ class ManagerAgent(AgentBase):
 
     async def __call__(self, state: AgentState) -> dict:
         self_res = state.get(config.self_solver_output_field)          # Get outputs from previous agents, who were called before in the graph and added to the state
+        tool_user_res = state.get(config.tools_usage_solver_output_field)
         # he doesn't get a message from the tool-using agent directly, but from the tool node that was called after it, we get that here later below
         
         # Check if this is the first call (no results yet from other agents)
@@ -36,7 +37,7 @@ class ManagerAgent(AgentBase):
             content=(
                 "Color Blocks solution comparison:\n\n"
                 f"Self-solver output:\n{self_res}\n\n"
-                f"Tool-based solver output:\n{tool_result}\n\n"
+                f"Tool-based solver output:\n{tool_user_res}\n\n"
                 "Output in the following format:\n"
                 "DIFFERENCES: <list differences>\n"
                 "SUMMARY: <2-4 sentences>\n"

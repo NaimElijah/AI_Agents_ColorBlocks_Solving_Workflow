@@ -8,7 +8,7 @@ mcp = FastMCP("Color Blocks Tools")
 
 @mcp.tool()
 def color_blocks_astar_cost(start_blocks: str, goal_blocks: str, heuristic="base") -> int:
-    """Uses A* search algorithm function to find the cost of the optimal solution from start_blocks to goal_blocks using the specified heuristic."""
+    """Finds the cost of the optimal Color Blocks solution from start_blocks to goal_blocks using the specified heuristic."""
     init_goal_for_heuristics(goal_blocks)
     init_goal_for_search(goal_blocks)
     start_state = color_blocks_state(start_blocks)

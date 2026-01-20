@@ -6,3 +6,5 @@ heuristic_search/__pycache__/
 llm/__pycache__/
 states/__pycache__/
 tools/__pycache__/
+
+AgenticAI.ipynb
