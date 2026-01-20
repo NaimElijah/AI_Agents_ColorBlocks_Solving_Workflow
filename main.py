@@ -1,16 +1,20 @@
 import asyncio
+import config
 from graph.agent_graph import build_graph
 from llm.llm_factory import get_llm, get_llm_with_tools
 from tools.color_blocks_tool import color_blocks_astar_cost
 
+# 2 options of using tools here: either bind the tools to the LLM before passing it to the agent, or use a ToolNode in the graph. We'll use a ToolNode here.
+# General Note: Agents transform state; graphs control execution.
 # An async main function to run the graph
 async def main():
 
     llm = get_llm()
-    tool_set_AStar = [color_blocks_astar_cost]
-    llm_with_tools = get_llm_with_tools(tool_set_AStar)
+    # tool_set_AStar = [color_blocks_astar_cost]
+    # llm_with_tools = get_llm_with_tools(tool_set_AStar)
 
-    graph = build_graph(llm, llm_with_tools)        # Build the graph & compile it
+    # graph = build_graph(llm, llm_with_tools)        # Build the graph & compile it
+    graph = build_graph(llm)        # Build the graph & compile it
 
     # The problems in a "start_blocks|goal_blocks" format
     problems = [
@@ -32,7 +36,7 @@ async def main():
         
         try:
             # Prepare the initial state, LangGraph adds to it later as needed from agents responses/returns
-            initial_state = {"start_blocks": start_blocks, "goal_blocks": goal_blocks}
+            initial_state = {config.state_start_blocks_field: start_blocks, config.state_goal_blocks_field: goal_blocks}
 
              # Invoke the graph with an initial state, awaitably, it means we can use async agents inside
             result = await graph.ainvoke(initial_state)
@@ -40,13 +44,13 @@ async def main():
 
             print("\n-" * 50 + "\n")
             print("\nToolSolverAgent_output: ")
-            print(result.get("ToolSolverAgent_output"))
+            print(result.get(config.tools_usage_solver_output_field))
             print("\n-" * 50 + "\n")
             print("\nSelfSolverAgent_output: ")
-            print(result.get("SelfSolverAgent_output"))
+            print(result.get(config.self_solver_output_field))
             print("\n-" * 50 + "\n")
             print("\nManagerAgent_feedback:")
-            print(result.get("manager_feedback"))
+            print(result.get(config.manager_feedback_field))
             print("\n-" * 50 + "\n")
 
         except Exception as e:

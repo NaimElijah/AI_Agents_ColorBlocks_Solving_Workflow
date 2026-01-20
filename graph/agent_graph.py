@@ -6,15 +6,21 @@ from agents.self_solver_agent import SelfSolverAgent
 from agents.tool_solver_agent import ToolSolverAgent
 from agents.manager_agent import ManagerAgent
 
+# 2 options of using tools here: either bind the tools to the LLM before passing it to the agent, or use a ToolNode in the graph. We'll use a ToolNode here.
+# General Note: Agents transform state; graphs control execution.
 
-def build_graph(llm, llm_with_tools):
+# def build_graph(llm, llm_with_tools):   # with binding tools to LLM
+def build_graph(llm):                 # without binding tools to LLM, we use a ToolNode instead
+
     graph = StateGraph(AgentState)
     
     # Define nodes
     graph.add_node("manager", ManagerAgent(llm))
     graph.add_node("self_solver", SelfSolverAgent(llm))
-    graph.add_node("with_tools_solver", ToolSolverAgent(llm_with_tools))
-    graph.add_node("tools", ToolNode([color_blocks_astar_cost]))
+    # graph.add_node("with_tools_solver", ToolSolverAgent(llm_with_tools))
+    graph.add_node("with_tools_solver", ToolSolverAgent(llm))
+    
+    graph.add_node("tools", ToolNode([color_blocks_astar_cost]))   # Tool node to use the color blocks cost tool
 
     # Define edges
     graph.add_edge(START, "manager")                 # Start --> manager agent

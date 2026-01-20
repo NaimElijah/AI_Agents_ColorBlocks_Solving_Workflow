@@ -32,6 +32,8 @@ class ToolSolverAgent(AgentBase):
 
         response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {config.tools_usage_solver_output_field: response.content}
+        # return {config.tools_usage_solver_output_field: response.content}
+        return {config.tools_usage_solver_output_field: [response]}             # Return the full response object to preserve tool call details, not just the text content.
+        # return {"messages": [response]}                                       # Return the full response object to preserve tool call details, not just the text content.
 
     

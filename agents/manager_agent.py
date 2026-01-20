@@ -1,6 +1,6 @@
 import config
 from agents.agent_base import AgentBase
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage
 from states.state1 import AgentState
 
 
@@ -10,7 +10,18 @@ class ManagerAgent(AgentBase):
 
     async def __call__(self, state: AgentState) -> dict:
         self_res = state.get(config.self_solver_output_field)          # Get outputs from previous agents, who were called before in the graph and added to the state
-        tool_res = state.get(config.tools_usage_solver_output_field)   # Get outputs from previous agents, who were called before in the graph and added to the state
+        # he doesn't get a message from the tool-using agent directly, but from the tool node that was called after it, we get that here later below
+        
+        # Check if this is the first call (no results yet from other agents)
+        if self_res is None:
+            # Return empty state on first call, let other agents run first
+            return {}
+        # so if we got to here, we have both results to compare, the result from the self-solving agent and the tool-using agent(the tool)
+
+        tool_result = None
+        for msg in state.get(config.tools_usage_solver_output_field, []):
+            if isinstance(msg, ToolMessage):
+                tool_result = msg.content   # Get outputs from previous tool used, who were called before in the graph and added to the state
 
         system_prompt = SystemMessage(
             content=(
@@ -25,7 +36,7 @@ class ManagerAgent(AgentBase):
             content=(
                 "Color Blocks solution comparison:\n\n"
                 f"Self-solver output:\n{self_res}\n\n"
-                f"Tool-based solver output:\n{tool_res}\n\n"
+                f"Tool-based solver output:\n{tool_result}\n\n"
                 "Output in the following format:\n"
                 "DIFFERENCES: <list differences>\n"
                 "SUMMARY: <2-4 sentences>\n"
