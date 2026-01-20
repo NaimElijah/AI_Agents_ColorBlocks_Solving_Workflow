@@ -1,3 +1,4 @@
+import config
 from agents.agent_base import AgentBase
 from states.state1 import AgentState
 from langchain_core.messages import SystemMessage, HumanMessage
@@ -30,4 +31,4 @@ class SelfSolverAgent(AgentBase):
 
         response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {"SelfSolverAgent_output": response.content}
+        return {config.self_solver_output_field: response.content}

@@ -1,8 +1,9 @@
 import os
+import config
 from langchain_ollama import ChatOllama
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-# class LLMFactory:       #TODO: see if can be used for modularity
+# class LLMFactory:       #  can be used for modularity if needed
 #     def __init__(self, model_name: str, temperature: float = 0.0):
 #         self.model_name = model_name
 #         self.temperature = temperature
@@ -14,7 +15,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 #             return ChatOllama(model=self.model_name, temperature=self.temperature)
         
 
-# class LLMWrapper:       #TODO: see if can be used for modularity
+# class LLMWrapper:       #  can be used for modularity if needed
 #     def __init__(self, llm):
 #         self.llm = llm
 
@@ -33,14 +34,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 # model = "gemini-2.5-flash"
 # model = "gemini-2.5-flash-lite"
 # global_llm = ChatGoogleGenerativeAI(model=model, temperature=0)
-# model = "qwen3:0.6b"                                    # model name
-model = "ibm/granite4:350m"                               # model name
-global_llm = ChatOllama(model=model, temperature=0.0)   # can be Ollama or Google Gemini or ...
-
 # SETUP API KEY if using Google Gemini
-# os.environ["GOOGLE_API_KEY"] = "YOUR_GOOGLE_API_KEY_HERE"
-# os.environ["GOOGLE_API_KEY"] = "YOUR_GOOGLE_API_KEY_HERE"  # Replace with your actual API key   # SETUP API KEY if using Google Gemini
+# os.environ["GOOGLE_API_KEY"] = config.llm_api_key
 
+global_llm = ChatOllama(model=config.llm_model, temperature=config.llm_temperature)   # can be Ollama or Google Gemini or ...
 
 def get_llm():
     return global_llm

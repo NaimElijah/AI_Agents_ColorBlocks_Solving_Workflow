@@ -1,6 +1,6 @@
 import asyncio
 from graph.agent_graph import build_graph
-from llm.llm_factory import get_llm
+from llm.llm_factory import get_llm, get_llm_with_tools
 from tools.color_blocks_tool import color_blocks_astar_cost
 
 # An async main function to run the graph
@@ -8,7 +8,7 @@ async def main():
 
     llm = get_llm()
     tool_set_AStar = [color_blocks_astar_cost]
-    llm_with_tools = llm.bind_tools(tool_set_AStar)
+    llm_with_tools = get_llm_with_tools(tool_set_AStar)
 
     graph = build_graph(llm, llm_with_tools)        # Build the graph & compile it
 
@@ -22,7 +22,7 @@ async def main():
         "(5,2),(1,3),(9,22),(21,4),(11,12),(12,13),(13,14)|11,2,1,14,9,13,21"
     ]
     
-    print("Starting Agentic Workflow for Color Blocks Problems...\n\n")
+    print(f"Starting Agentic Workflow for {len(problems)} Color Blocks Problems...\n\n")
     
     for i, problem in enumerate(problems, 1):
         start_blocks, goal_blocks = problem.split("|")

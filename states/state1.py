@@ -1,4 +1,5 @@
 
+import config
 from typing import TypedDict
 
 # Define the state structure for the agents, using TypedDict for type safety, flexibility, and clarity, with optional fields, no logic should be here.
@@ -9,3 +10,4 @@ class AgentState(TypedDict, total=False):  # total=False makes all fields option
     ToolSolverAgent_output: str
     manager_feedback: str
     # Add other state fields as needed
+    #! These field names need to match the state field names in the config.py

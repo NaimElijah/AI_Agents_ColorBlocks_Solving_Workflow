@@ -1,3 +1,4 @@
+import config
 from agents.agent_base import AgentBase
 from langchain_core.messages import SystemMessage, HumanMessage
 from states.state1 import AgentState
@@ -31,6 +32,6 @@ class ToolSolverAgent(AgentBase):
 
         response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {"ToolSolverAgent_output": response.content}
+        return {config.tools_usage_solver_output_field: response.content}
 
     

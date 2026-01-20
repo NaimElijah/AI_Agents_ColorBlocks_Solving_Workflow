@@ -1,3 +1,4 @@
+import config
 from agents.agent_base import AgentBase
 from langchain_core.messages import SystemMessage, HumanMessage
 from states.state1 import AgentState
@@ -8,8 +9,8 @@ class ManagerAgent(AgentBase):
         super().__init__(llm)
 
     async def __call__(self, state: AgentState) -> dict:
-        self_res = state.get("SelfSolverAgent_output")   # Get outputs from previous agents, who were called before in the graph and added to the state
-        tool_res = state.get("ToolSolverAgent_output")   # Get outputs from previous agents, who were called before in the graph and added to the state
+        self_res = state.get(config.self_solver_output_field)          # Get outputs from previous agents, who were called before in the graph and added to the state
+        tool_res = state.get(config.tools_usage_solver_output_field)   # Get outputs from previous agents, who were called before in the graph and added to the state
 
         system_prompt = SystemMessage(
             content=(
@@ -34,5 +35,5 @@ class ManagerAgent(AgentBase):
 
         response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {"manager_feedback": response.content}
+        return {config.manager_feedback_field: response.content}
 
