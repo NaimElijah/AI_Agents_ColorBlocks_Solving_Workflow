@@ -12,12 +12,6 @@ class ManagerAgent(AgentBase):
         self_res = state.get(config.self_solver_output_field)          # Get outputs from previous agents, who were called before in the graph and added to the state
         tool_user_res = state.get(config.tools_usage_solver_output_field)
         # he doesn't get a message from the tool-using agent directly, but from the tool node that was called after it, we get that here later below
-        
-        # Check if this is the first call (no results yet from other agents)
-        if self_res is None:
-            # Return empty state on first call, let other agents run first
-            return {}
-        # so if we got to here, we have both results to compare, the result from the self-solving agent and the tool-using agent(the tool)
 
         tool_result = None
         for msg in state.get(config.tools_usage_solver_output_field, []):
