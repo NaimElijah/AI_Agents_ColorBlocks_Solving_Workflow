@@ -8,7 +8,8 @@ class SelfSolverAgent(AgentBase):
     def __init__(self, llm):
         super().__init__(llm)
 
-    async def __call__(self, state: AgentState) -> AgentState:   # __call__ method lets a class instance be called as a function, LangGraph expects nodes to be callables
+     # Nodes return a “state update”, not a new state object
+    async def __call__(self, state: AgentState) -> dict:   # __call__ method lets a class instance be called as a function, LangGraph expects nodes to be callables
         system_prompt = SystemMessage(
             content=(
                 "You are an AI agent solving a heuristic search problem.\n"

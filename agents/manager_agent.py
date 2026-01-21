@@ -8,15 +8,20 @@ class ManagerAgent(AgentBase):
     def __init__(self, llm):
         super().__init__(llm)
 
+    # Nodes return a “state update”, not a new state object
     async def __call__(self, state: AgentState) -> dict:
         self_res = state.get(config.self_solver_output_field)          # Get outputs from previous agents, who were called before in the graph and added to the state
-        tool_user_res = state.get(config.tools_usage_solver_output_field)
+        # tool_user_res = state.get(config.tools_usage_solver_output_field)   # When using ToolNode, tool outputs are NOT stored in custom fields.
+        # they live in state["messages"], specifically in ToolMessage(content=...)
         # he doesn't get a message from the tool-using agent directly, but from the tool node that was called after it, we get that here later below
 
+        # Tool result MUST be extracted from messages
+        # In LangChain, tool calls are usually in 'tool_calls' attribute of AIMessage objects, but here we look for ToolMessage objects in state["messages"]
+        # or 'name' attribute if it is a ToolMessage
         tool_result = None
-        for msg in state.get(config.tools_usage_solver_output_field, []):
+        for msg in state.get("messages", []):
             if isinstance(msg, ToolMessage):
-                tool_result = msg.content   # Get outputs from previous tool used, who were called before in the graph and added to the state
+                tool_result = msg.content
 
         system_prompt = SystemMessage(
             content=(
@@ -31,7 +36,7 @@ class ManagerAgent(AgentBase):
             content=(
                 "Color Blocks solution comparison:\n\n"
                 f"Self-solver output:\n{self_res}\n\n"
-                f"Tool-based solver output:\n{tool_user_res}\n\n"
+                f"Tool-based solver output:\n{tool_result}\n\n"
                 "Output in the following format:\n"
                 "DIFFERENCES: <list differences>\n"
                 "SUMMARY: <2-4 sentences>\n"
@@ -41,5 +46,10 @@ class ManagerAgent(AgentBase):
 
         response = await self.llm.ainvoke([system_prompt, user_prompt])
         # return a dictionary describing what he added or updated.
-        return {config.manager_feedback_field: response.content}
+        return {
+            config.manager_feedback_field: response.content,
+            config.tools_usage_solver_output_field: tool_result
+        }
+
+
 

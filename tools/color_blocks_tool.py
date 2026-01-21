@@ -1,14 +1,25 @@
-from mcp.server.fastmcp import FastMCP
-from heuristic_search.heuristics import base_heuristic, init_goal_for_heuristics, advanced_heuristic
-from heuristic_search.color_blocks_state import color_blocks_state, init_goal_for_search
-from heuristic_search import search
+# from mcp.server.fastmcp import FastMCP
+from heuristic_search.heuristics import (
+    base_heuristic,
+    init_goal_for_heuristics,
+    advanced_heuristic,
+)
+from heuristic_search.color_blocks_state import (
+    color_blocks_state,
+    init_goal_for_search,
+)
+from heuristic_search.search import search
 
 # Initialize FastMCP, with a custom name for the tool set.
-mcp = FastMCP("Color Blocks Tools")
+# mcp = FastMCP("Color Blocks Tools")
 
-@mcp.tool()
+# @mcp.tool()
 def color_blocks_astar_cost(start_blocks: str, goal_blocks: str, heuristic="base") -> int:
     """Finds the cost of the optimal Color Blocks solution from start_blocks to goal_blocks using the specified heuristic."""
+    print("search:", search, "callable:", callable(search))  #! DEBUG
+    print("base_heuristic:", base_heuristic, "callable:", callable(base_heuristic)) #! DEBUG
+    print("advanced_heuristic:", advanced_heuristic, "callable:", callable(advanced_heuristic)) #! DEBUG
+
     init_goal_for_heuristics(goal_blocks)
     init_goal_for_search(goal_blocks)
     start_state = color_blocks_state(start_blocks)

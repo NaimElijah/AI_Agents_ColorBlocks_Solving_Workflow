@@ -33,12 +33,16 @@ async def main():
         
         try:
             # Prepare the initial state, LangGraph adds to it later as needed from agents responses/returns
-            initial_state = {config.state_start_blocks_field: start_blocks, config.state_goal_blocks_field: goal_blocks}
+            initial_state = {
+                config.state_start_blocks_field: start_blocks,
+                config.state_goal_blocks_field: goal_blocks,
+                "messages": []
+            }
 
              # Invoke the graph with an initial state, awaitably, it means we can use async agents inside
             result = await graph.ainvoke(initial_state)
             # the graph returns a dictionary with all the outputs from the nodes, which is the final state of the graph
-
+            
             print("-" * 40 + "\n")
             print(f"\nToolSolverAgent_output: {result.get(config.tools_usage_solver_output_field)}\n")
             print("-" * 40 + "\n")
