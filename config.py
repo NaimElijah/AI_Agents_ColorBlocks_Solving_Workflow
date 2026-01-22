@@ -14,5 +14,15 @@ self_solver_output_field = "SelfSolverAgent_output"
 tools_usage_solver_output_field = "ToolSolverAgent_output"
 manager_feedback_field = "manager_feedback"
 
+# Problem inputs (In a "start_blocks|goal_blocks" format)
+problems = [
+    # Example 1
+    "(5,2),(1,3),(9,22),(21,4)|2,22,4,3",
+    # Example 2
+    "(5,2),(1,3),(9,22),(21,4)|2,1,9,21",
+    # Example 3
+    "(5,2),(1,3),(9,22),(21,4),(11,12),(12,13),(13,14)|11,2,1,14,9,13,21"
+]
+
 
 # Can add other configuration settings as needed

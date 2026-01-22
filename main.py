@@ -11,24 +11,14 @@ async def main():
 
     llm = get_llm()
 
-    graph = build_graph(llm)        # Build the graph & compile it
-
-    # The problems in a "start_blocks|goal_blocks" format
-    problems = [
-        # Example 1
-        "(5,2),(1,3),(9,22),(21,4)|2,22,4,3",
-        # Example 2
-        "(5,2),(1,3),(9,22),(21,4)|2,1,9,21",
-        # Example 3
-        "(5,2),(1,3),(9,22),(21,4),(11,12),(12,13),(13,14)|11,2,1,14,9,13,21"
-    ]
+    graph = build_graph(llm)        # Build the graph & compile it    
     
-    print(f"Starting Agentic Workflow for {len(problems)} Color Blocks Problems...\n\n")
+    print(f"\nStarting Agentic Workflow for {len(config.problems)} Color Blocks Problems...\n")
     
-    for i, problem in enumerate(problems, 1):
+    for i, problem in enumerate(config.problems, 1):
         start_blocks, goal_blocks = problem.split("|")
 
-        print(f"--- Processing Problem {i} ---\n")
+        print(f"\n\n\n\n      ------  Processing Problem {i}  ------\n")
         print(f"Input:\nStart Blocks: {start_blocks}\nGoal Blocks: {goal_blocks}\n")
         
         try:
@@ -43,17 +33,12 @@ async def main():
             result = await graph.ainvoke(initial_state)
             # the graph returns a dictionary with all the outputs from the nodes, which is the final state of the graph
             
-            print("-" * 40 + "\n")
-            print(f"\nToolSolverAgent_output: {result.get(config.tools_usage_solver_output_field)}\n")
-            print("-" * 40 + "\n")
-            print(f"\nSelfSolverAgent_output: {result.get(config.self_solver_output_field)}\n")
-            print("-" * 40 + "\n")
-            print(f"\nManagerAgent_feedback: {result.get(config.manager_feedback_field)}\n")
-            print("-" * 40 + "\n")
-
+            print(f"\n     {'-'*10}   {config.tools_usage_solver_output_field}   {'-'*10}\n{result.get(config.tools_usage_solver_output_field)}\n\n")
+            print(f"\n     {'-'*10}   {config.self_solver_output_field}   {'-'*10}\n{result.get(config.self_solver_output_field)}\n\n")
+            print(f"\n     {'-'*10}   {config.manager_feedback_field}   {'-'*10}\n{result.get(config.manager_feedback_field)}\n\n")
+            
         except Exception as e:
             print(f"Error processing problem {i}: {e.__str__()}\n")
-
 
 
 

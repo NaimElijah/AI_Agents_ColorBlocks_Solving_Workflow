@@ -13,7 +13,7 @@ class SelfSolverAgent(AgentBase):
         system_prompt = SystemMessage(
             content=(
                 "You are an AI agent solving a heuristic search problem.\n"
-                "You are NOT allowed to use any tools or external code.\n"
+                "You are NOT allowed to use any tools or external help.\n"
                 "Try to reason about the solution cost.\n"
                 "Return an integer cost and a short explanation."
             )

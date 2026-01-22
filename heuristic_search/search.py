@@ -1,4 +1,5 @@
-from heuristic_search import color_blocks_state, search_node
+from heuristic_search.color_blocks_state import color_blocks_state
+from heuristic_search.search_node import search_node
 import heapq
 
 def create_open_set():
